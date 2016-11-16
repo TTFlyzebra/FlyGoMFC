@@ -1,5 +1,24 @@
-﻿生成启动时间为 2016/11/17 0:03:12。
+﻿生成启动时间为 2016/11/17 0:17:11。
+     1>项目“D:\vcpro\flygomfc\flygomfc\flygomfc.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Debug\flygomfc.pch" /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\flygomfc.pch" /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt flygomfc.cpp flygomfcDlg.cpp src\tool.cpp
+         tool.cpp
+         flygomfcDlg.cpp
+         flygomfc.cpp
+         正在生成代码...
+       ResourceCompile:
+         C:\Program Files (x86)\Windows Kits\8.0\bin\x86\rc.exe /D _DEBUG /D _UNICODE /D UNICODE /l"0x0804" /IDebug\ /nologo /fo"Debug\flygomfc.res" flygomfc.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\vcpro\flygomfc\Debug\flygomfc.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"D:\vcpro\flygomfc\Debug\flygomfc.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"wWinMainCRTStartup" /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\vcpro\flygomfc\Debug\flygomfc.lib" /MACHINE:X86 Debug\flygomfc.res
+         Debug\flygomfc.obj
+         Debug\flygomfcDlg.obj
+         Debug\tool.obj
+         Debug\stdafx.obj
+         flygomfc.vcxproj -> D:\vcpro\flygomfc\Debug\flygomfc.exe
+     1>已完成生成项目“D:\vcpro\flygomfc\flygomfc\flygomfc.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:00.03
+已用时间 00:00:07.05
