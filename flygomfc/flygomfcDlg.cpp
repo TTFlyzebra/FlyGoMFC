@@ -198,7 +198,7 @@ void CflygomfcDlg::OnBnClickedOk(){
 		AfxMessageBox(_T("ÇëÑ¡Ôñä¯ÀÀÆ÷£¡"));
 		return;
 	}
-	if(url==""){
+	if(""==url){
 		AfxMessageBox(_T("ÇëÊäÈëÍøÖ·£¡"));
 		return;
 	}
@@ -303,7 +303,12 @@ UINT CflygomfcDlg::ThreadFunc(LPVOID pParam){
 				cutStr = cutStr.Right(num);
 			}
 
-			cmdline = '\"'+mDlg->myIE+'\"'+' '+'\"'+runStr +'\"';
+			//Èç¹ûÊÇ¹È¸èä¯ÀÀÆ÷£¬Ìí¼Ó²ÎÊý
+			if(mDlg->myIE.FindOneOf(_T("chrome.exe"))){
+				cmdline = '\"'+mDlg->myIE+_T("\" --disable-images \"")+runStr +'\"';
+			}else{
+				cmdline = '\"'+mDlg->myIE+'\"'+' '+'\"'+runStr +'\"';
+			}
 
 			CreateProcess(mDlg->myIE,(LPWSTR)(LPCWSTR)(cmdline),NULL,NULL,false,0,NULL,NULL,&si,&pi);			
 			CloseHandle(pi.hThread);
