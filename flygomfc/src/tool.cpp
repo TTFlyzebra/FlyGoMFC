@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "tool.h"
-#include "tlhelp32.h" 
+#include <tlhelp32.h> 
 
 BOOL  LookUpProcessAndKill(const std::vector<CString>  &vecProcessName)
 {
