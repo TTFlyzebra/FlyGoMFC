@@ -16,8 +16,8 @@
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
-//开始定义全局变量
-BOOL bTreadRun;
+//在此处定义全局变量
+BOOL bThreadRun;
 int runCount;
 
 class CAboutDlg : public CDialogEx
@@ -50,15 +50,12 @@ END_MESSAGE_MAP()
 
 
 // CflygomfcDlg 对话框
-
-
-
 CflygomfcDlg::CflygomfcDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CflygomfcDlg::IDD, pParent)
 	, url(_T("http://v.qq.com/x/cover/4mz2zy4nxjjqqbp/k0020goctd2.html?ptag=bl.zy.bs_dfzc_41.161026&volume=0\r\nhttp://v.qq.com/x/cover/4mz2zy4nxjjqqbp/p002077glsm.html?ptag=bl.zy.bs_dfzc_42.161026&volume=0\r\nhttp://v.qq.com/x/cover/4mz2zy4nxjjqqbp/e00203bcxtq.html?ptag=bl.zy.bs_dfzc_44.161026&volume=0"))
 	, loopsum(1000000)
 	, loopstoptime(75)
-	, myIE(_T("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"))
+	, myIE(_T("C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -89,7 +86,6 @@ END_MESSAGE_MAP()
 
 
 // CflygomfcDlg 消息处理程序
-
 BOOL CflygomfcDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -120,20 +116,21 @@ BOOL CflygomfcDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	//初始化
+
+	//--------------------------初始化参数--------------------------------//
 	SetWindowText(_T("Let's Go......"));
-	bTreadRun = FALSE;
+	bThreadRun = FALSE;
 
 	//---------------------------托盘显示---------------------------------//
-
 	m_nid.cbSize  = (DWORD)sizeof(NOTIFYICONDATA);
 	m_nid.hWnd    = this->m_hWnd;
 	m_nid.uID     = IDR_MAINFRAME;
 	m_nid.uFlags  = NIF_ICON | NIF_MESSAGE | NIF_TIP ;
-	m_nid.uCallbackMessage = WM_SHOWTASK;             // 自定义的消息名称
+	m_nid.uCallbackMessage = WM_SHOWTASK;
 	m_nid.hIcon   = LoadIcon(AfxGetInstanceHandle(),MAKEINTRESOURCE(IDR_MAINFRAME));
-	wcscpy_s(m_nid.szTip, _T("Show me click me"));              // 信息提示条为"服务器程序"，VS2008 UNICODE编码用wcscpy_s()函数
-	Shell_NotifyIcon(NIM_ADD, &m_nid);                // 在托盘区添加图标
+	wcscpy_s(m_nid.szTip, _T("Show me click me")); 
+	Shell_NotifyIcon(NIM_ADD, &m_nid);
+
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -190,9 +187,6 @@ HCURSOR CflygomfcDlg::OnQueryDragIcon()
 
 void CflygomfcDlg::OnBnClickedOk(){	
 	// TODO: 在此添加控件通知处理程序代码
-	//	CDialogEx::OnOK();
-	//	ShellExecute(0, NULL, L"http://www.sina.com.cn", NULL,NULL, SW_NORMAL); 
-	//	open_ie_with_url(L"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",L"http://www.sina.com.cn");
 
 	UpdateData(TRUE);
 	if(""==myIE){
@@ -203,15 +197,28 @@ void CflygomfcDlg::OnBnClickedOk(){
 		AfxMessageBox(_T("请输入网址！"));
 		return;
 	}
-	if(!bTreadRun){
-		bTreadRun = TRUE;
+	if(0>=loopsum){
+		AfxMessageBox(_T("请输入正确的循环次数！"));
+		return;
+	}
+	if(0>=loopstoptime){
+		AfxMessageBox(_T("请输入正确的停留时间！"));
+		return;
+	}
+	if(!bThreadRun){
+		bThreadRun = TRUE;
 		pThread = AfxBeginThread(ThreadFunc,this);
 		SetWindowText(_T("正在执行任务....."));
 	}else{
-		AfxMessageBox(_T("程序正在运行，请停止后再启动！"));
+		AfxMessageBox(_T("正在执行任务，请先停止取消任务后再启动！"));
 	}
+	//	CDialogEx::OnOK();
 }
 
+
+/**
+* 功能：拖盘消息处理
+**/
 LRESULT CflygomfcDlg::OnShowTask(WPARAM wParam, LPARAM lParam){
 	if(wParam != IDR_MAINFRAME){
 		return 1;
@@ -245,8 +252,9 @@ void CflygomfcDlg::OnSize(UINT nType, int cx, int cy)
 	CDialogEx::OnSize(nType, cx, cy);
 
 	// TODO: 在此处添加消息处理程序代码
+	// 已显示拖盘，当最小化时，隐藏主窗口
 	if(nType == SIZE_MINIMIZED) {  
-		ShowWindow(SW_HIDE); // 当最小化市，隐藏主窗口
+		ShowWindow(SW_HIDE); 
 	}  
 }
 
@@ -256,8 +264,12 @@ void CflygomfcDlg::OnDestroy()
 	CDialogEx::OnDestroy();
 
 	// TODO: 在此处添加消息处理程序代码
-	KillIE(myIE);
-	Shell_NotifyIcon(NIM_DELETE, &m_nid);    
+	//程序结束时，关闭程序所打开的浏览器
+	if(bThreadRun){	
+		bThreadRun = FALSE;
+		KillIE(myIE);
+	}
+	Shell_NotifyIcon(NIM_DELETE, &m_nid);
 
 }
 
@@ -265,10 +277,15 @@ void CflygomfcDlg::OnDestroy()
 void CflygomfcDlg::OnClose()
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	ShowWindow(SW_HIDE); // 当最小化市，隐藏主窗口
+
+	// 已显示拖盘图标，当最小化时，差关闭窗口，只是隐藏主窗口
+	ShowWindow(SW_HIDE); 
 	//	CDialogEx::OnClose();
 }
 
+/**
+*	功能:任务管理线程,解析url地址，根据url地址打开浏览器，控制页面停留时间
+**/
 UINT CflygomfcDlg::ThreadFunc(LPVOID pParam){
 	CflygomfcDlg *mDlg=(CflygomfcDlg *)pParam;
 	STARTUPINFO si={sizeof(si)};
@@ -293,15 +310,12 @@ UINT CflygomfcDlg::ThreadFunc(LPVOID pParam){
 		if (SHGetSpecialFolderPath(NULL, szPath, CSIDL_COOKIES, FALSE)){//得到目录，并清空
 			EmptyDirectory(szPath,FALSE,FALSE);
 		}
-		if(bTreadRun==false){
+		if(bThreadRun==false){
 			return 0;
 		}
 		pos1 = 0;
 		num = 0;
-//		leftStr = mDlg->url;
-//		rightStr = mDlg->url;
 		cutStr = mDlg->url;
-
 		while (-1!=pos1){
 			pos1 = cutStr.FindOneOf(_T("\n"));
 			if(-1==pos1){
@@ -311,27 +325,23 @@ UINT CflygomfcDlg::ThreadFunc(LPVOID pParam){
 				num = cutStr.GetLength()-pos1-1;
 				cutStr = cutStr.Right(num);
 			}
-
 			//如果是谷歌浏览器，添加参数
 //			if(((mDlg->myIE).Find(_T("chrome.exe")))==-1){
 //				cmdline = '\"'+mDlg->myIE+_T("\" --disable-images \"")+runStr +'\"';
 //			}else{
-				cmdline = '\"'+mDlg->myIE+'\"'+' '+'\"'+runStr +'\"';
+			cmdline = '\"'+mDlg->myIE+'\"'+' '+'\"'+runStr +'\"';
 //			}
-
 			CreateProcess(mDlg->myIE,(LPWSTR)(LPCWSTR)(cmdline),NULL,NULL,false,0,NULL,NULL,&si,&pi);			
 			CloseHandle(pi.hThread);
 			CloseHandle(pi.hProcess);
 		}
 
-		//延时
-
+		//页面停留时间处理
 		num = mDlg->loopstoptime;
 		j = 0;
 		while ((j<num)){
-			//外部控制结束线程
-			title.Format(_T("正在执行任务，第%d个任务，当前任务已运行%d秒......"),runCount+1,j);
-			if(!bTreadRun){
+			title.Format(_T("正在执行任务，第%d次，页面已停留%d秒......"),runCount+1,j);
+			if(!bThreadRun){
 				return 0;
 			}
 			Sleep(1000);			
@@ -340,17 +350,19 @@ UINT CflygomfcDlg::ThreadFunc(LPVOID pParam){
 		}	
 		//关闭浏览器
 		KillIE(mDlg->myIE);
-
 		Sleep(1000);		
 	}
 	mDlg->SetWindowText(_T("所有任务执行完毕！"));
 	return 0;
 }
 
-
+/**
+* 功能：弹出打开文件对话框，并更新返回结果
+**/
 void CflygomfcDlg::OnBnClickedOpenfile()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	UpdateData(TRUE);
 	CString FilePathName;
 	CFileDialog dlg(TRUE, //TRUE为OPEN对话框，FALSE为SAVE AS对话框
 		NULL,
@@ -364,15 +376,17 @@ void CflygomfcDlg::OnBnClickedOpenfile()
 	}
 }
 
-
+/**
+* 功能：停止任务，关闭所打开的浏览器
+**/
 void CflygomfcDlg::OnBnClickedStop()
 {
 	CString msg;
 	// TODO: 在此添加控件通知处理程序代码
-	if(bTreadRun==FALSE){
+	if(bThreadRun==FALSE){
 		return;
 	}
-	bTreadRun = FALSE;
+	bThreadRun = FALSE;
 	SetWindowText(_T("正在停止任务....."));
 	Sleep(1000);
 	KillIE(myIE);
@@ -381,7 +395,14 @@ void CflygomfcDlg::OnBnClickedStop()
 	AfxMessageBox(msg);
 }
 
-BOOL CflygomfcDlg::KillIE(CString iePath){
+
+/**
+* 功能：关闭打开的浏览器
+* 参数：
+*		iePath：启动IE的EXE文件名
+**/
+BOOL CflygomfcDlg::KillIE(CString iePath)
+{
 	std::vector<CString> proVector;
 	CString killPro;
 	int pos = 0;

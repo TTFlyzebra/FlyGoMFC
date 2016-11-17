@@ -2,6 +2,10 @@
 #include "tool.h"
 #include <tlhelp32.h> 
 
+/**
+* 功能：关闭进程
+*
+**/
 BOOL  LookUpProcessAndKill(const std::vector<CString>  &vecProcessName)
 {
 	BOOL bRet = FALSE;
@@ -54,6 +58,10 @@ BOOL  LookUpProcessAndKill(const std::vector<CString>  &vecProcessName)
 	return  bRet;
 }
 
+
+/**
+*功能：分隔字符串
+**/
 CString * SplitString(CString str, char split, int& iSubStrs)
 {
 	int iPos = 0; //分割符位置  

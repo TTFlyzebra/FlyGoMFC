@@ -2,6 +2,9 @@
 #include "delIeCache.h"
 #include <WinInet.h>
 
+/**
+*功能：删除缓存中的cookie
+**/
 BOOL DeleteUrlCache(DEL_CACHE_TYPE type){
     BOOL bRet = FALSE;
 	HANDLE hEntry;
@@ -37,7 +40,7 @@ cleanup:
 }
 
 /**
-* 函数功能 删除指定目录下的所有文件
+* 函数功能:删除指定目录下的所有文件
 **/
 BOOL EmptyDirectory(LPCTSTR szPath, BOOL bDeleteDesktopIni,   BOOL bWipeIndexDat){
 	WIN32_FIND_DATA wfd;
@@ -81,6 +84,9 @@ BOOL EmptyDirectory(LPCTSTR szPath, BOOL bDeleteDesktopIni,   BOOL bWipeIndexDat
 	return TRUE;
 }
 
+/**
+* 功能:改变文件属性
+**/
 BOOL WipeFile(LPCTSTR szDir, LPCTSTR szFile) {
 	CString sPath;
 	HANDLE	hFile;
