@@ -302,21 +302,32 @@ UINT CflygomfcDlg::ThreadFunc(LPVOID pParam){
 	CString title;
 
 	TCHAR szPath[MAX_PATH];	
-	
+
 	runCount = 0;
 
-	for(runCount=0;runCount<mDlg->loopsum;runCount++){
-		DeleteUrlCache(Cookie);
-		if (SHGetSpecialFolderPath(NULL, szPath, CSIDL_COOKIES, FALSE)){//得到目录，并清空
-			EmptyDirectory(szPath,FALSE,FALSE);
-		}
+	for(runCount=0;runCount<mDlg->loopsum;runCount++){		
 		if(bThreadRun==false){
 			return 0;
 		}
+
+		//清除缓存
+		//DeleteUrlCache(Cookie);
+		//if (SHGetSpecialFolderPath(NULL, szPath, CSIDL_COOKIES, FALSE)){//得到目录，并清空
+		//	EmptyDirectory(szPath,FALSE,FALSE);
+		//}
+		system("Rundll32 InetCpl.cpl,ClearMyTracksByProcess 2");
+
+		//CreateProcess(_T("C:\\Windows\System32\\cmd.exe"),_T("Rundll32 InetCpl.cpl,ClearMyTracksByProcess 2"),NULL,NULL,false,0,NULL,NULL,&si,&pi);	
+
+		if(!bThreadRun){
+			return 0;
+		}
+
+
 		pos1 = 0;
 		num = 0;
 		cutStr = mDlg->url;
-		while (-1!=pos1){
+		while (-1!=pos1){			
 			pos1 = cutStr.FindOneOf(_T("\n"));
 			if(-1==pos1){
 				runStr = cutStr;
@@ -326,11 +337,11 @@ UINT CflygomfcDlg::ThreadFunc(LPVOID pParam){
 				cutStr = cutStr.Right(num);
 			}
 			//如果是谷歌浏览器，添加参数
-//			if(((mDlg->myIE).Find(_T("chrome.exe")))==-1){
-//				cmdline = '\"'+mDlg->myIE+_T("\" --disable-images \"")+runStr +'\"';
-//			}else{
+			//			if(((mDlg->myIE).Find(_T("chrome.exe")))==-1){
+			//				cmdline = '\"'+mDlg->myIE+_T("\" --disable-images \"")+runStr +'\"';
+			//			}else{
 			cmdline = '\"'+mDlg->myIE+'\"'+' '+'\"'+runStr +'\"';
-//			}
+			//			}
 			CreateProcess(mDlg->myIE,(LPWSTR)(LPCWSTR)(cmdline),NULL,NULL,false,0,NULL,NULL,&si,&pi);			
 			CloseHandle(pi.hThread);
 			CloseHandle(pi.hProcess);
@@ -350,7 +361,7 @@ UINT CflygomfcDlg::ThreadFunc(LPVOID pParam){
 		}	
 		//关闭浏览器
 		KillIE(mDlg->myIE);
-		Sleep(1000);		
+		Sleep(1000);
 	}
 	mDlg->SetWindowText(_T("所有任务执行完毕！"));
 	return 0;
@@ -381,18 +392,20 @@ void CflygomfcDlg::OnBnClickedOpenfile()
 **/
 void CflygomfcDlg::OnBnClickedStop()
 {
-	CString msg;
-	// TODO: 在此添加控件通知处理程序代码
-	if(bThreadRun==FALSE){
-		return;
-	}
-	bThreadRun = FALSE;
-	SetWindowText(_T("正在停止任务....."));
-	Sleep(1000);
-	KillIE(myIE);
-	SetWindowText(_T("Let's Go......"));
-	msg.Format(_T("任务已手动停止，共完成了%d次任务"),runCount);
-	AfxMessageBox(msg);
+	CreateProcess(_T("C:\\Windows\System32\\cmd.exe"),_T("Rundll32 InetCpl.cpl,ClearMyTracksByProcess 2"),NULL,NULL,false,0,NULL,NULL,&si,&pi);	
+
+	//CString msg;
+	//// TODO: 在此添加控件通知处理程序代码
+	//if(bThreadRun==FALSE){
+	//	return;
+	//}
+	//bThreadRun = FALSE;
+	//SetWindowText(_T("正在停止任务....."));
+	//Sleep(1000);
+	//KillIE(myIE);
+	//SetWindowText(_T("Let's Go......"));
+	//msg.Format(_T("任务已手动停止，共完成了%d次任务"),runCount);
+	//AfxMessageBox(msg);
 }
 
 
