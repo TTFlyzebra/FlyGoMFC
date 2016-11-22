@@ -52,7 +52,7 @@ END_MESSAGE_MAP()
 // CflygomfcDlg 对话框
 CflygomfcDlg::CflygomfcDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CflygomfcDlg::IDD, pParent)
-	, url(_T("http://v.qq.com/x/cover/4mz2zy4nxjjqqbp/k0020goctd2.html?ptag=bl.zy.bs_dfzc_41.161026&volume=0\r\nhttp://v.qq.com/x/cover/4mz2zy4nxjjqqbp/p002077glsm.html?ptag=bl.zy.bs_dfzc_42.161026&volume=0\r\nhttp://v.qq.com/x/cover/4mz2zy4nxjjqqbp/e00203bcxtq.html?ptag=bl.zy.bs_dfzc_44.161026&volume=0"))
+	, url(_T("http://v.qq.com/x/cover/4mz2zy4nxjjqqbp/k0020goctd2.html?ptag=bl.zy.bs_dfzc_41.161026&volume=0\r\nhttp://v.qq.com/x/cover/4mz2zy4nxjjqqbp/p002077glsm.html?ptag=bl.zy.bs_dfzc_42.161026&volume=0"))
 	, loopsum(1000000)
 	, loopstoptime(75)
 	, myIE(_T("C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe"))
@@ -392,20 +392,19 @@ void CflygomfcDlg::OnBnClickedOpenfile()
 **/
 void CflygomfcDlg::OnBnClickedStop()
 {
-	CreateProcess(_T("C:\\Windows\System32\\cmd.exe"),_T("Rundll32 InetCpl.cpl,ClearMyTracksByProcess 2"),NULL,NULL,false,0,NULL,NULL,&si,&pi);	
 
-	//CString msg;
-	//// TODO: 在此添加控件通知处理程序代码
-	//if(bThreadRun==FALSE){
-	//	return;
-	//}
-	//bThreadRun = FALSE;
-	//SetWindowText(_T("正在停止任务....."));
-	//Sleep(1000);
-	//KillIE(myIE);
-	//SetWindowText(_T("Let's Go......"));
-	//msg.Format(_T("任务已手动停止，共完成了%d次任务"),runCount);
-	//AfxMessageBox(msg);
+	CString msg;
+	// TODO: 在此添加控件通知处理程序代码
+	if(bThreadRun==FALSE){
+		return;
+	}
+	bThreadRun = FALSE;
+	SetWindowText(_T("正在停止任务....."));
+	Sleep(1000);
+	KillIE(myIE);
+	SetWindowText(_T("Let's Go......"));
+	msg.Format(_T("任务已手动停止，共完成了%d次任务"),runCount);
+	AfxMessageBox(msg);
 }
 
 
